@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>Document</title>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var URLactual = window.location;
+            var cadena = URLactual+"";
+            var usr = cadena.substr(cadena.length-1,1)
+            var usuario = usr=="1"?"Alex de OB":usr=="2"?"Raul de OB":usr=="3"?"Tania de OB":"NA";
+            $("#a_UserName").text(usuario)
+            $("#usr").text(usr)
+            
+            //Contenido
+            $('th').click(function() {
+                var table = $(this).parents('table').eq(0)
+                var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+                this.asc = !this.asc
+                if (!this.asc) {
+                rows = rows.reverse()
+                }
+                for (var i = 0; i < rows.length; i++) {
+                table.append(rows[i])
+                }
+                setIcon($(this), this.asc);
+            })
+
+            llenarTabla(usr)
+            
+            return false;
+        });
+
+        function llenarTabla(usr){
+
+            var myArray = ["Álvaro Sánchez Monteagudo_Valencia_España_+34657852546_smontegudo@gmail.com_ANGULAR|REACT|HTML&CSS_BB", 
+                            "Amparo Herra Climent_Sevilla_España_+34123456789_aherrera@gmail.com_FLUTTER|REACT_BB", 
+                            "Ana Gutierrez Lozano_Madrid_España_+34987541236_agutierrez@gmail.com_REACT|SYMFONY_BB", 
+                            "Antonio Miguel Lacunza_Barcelona_España_+34758426985_amiguel@gmail.com_ANGULAR|REACT_BB", 
+                            "Antonio Delgado Jimeno_Oviedo_España_+34542874517_adelgado@gmail.com_ANGULAR|HTML&CSS_BB", 
+                            "Belén Jerez Rivera_Jaen_España_+34968574215_bjerez@gmail.com_HTML&CSS_BB", 
+                            "Carla Barroso Soriano_Gijón_España_+34485926157_cbarroso@gmail.com_REACT_BB", 
+                            "Carlos Yuste Guerrero_Valencia_España_+34487596854_cyuste@gmail.com_ANGULAR_BB", 
+                            "Carmina Pérez Lopez_Sevilla_España_+34154785426_cperez@gmail.com_FLUTTER_BB", 
+                            "Iker Casillas_Madrid_España_+34154859263_ikasillas@gmail.com_FLUTTER|REACT_BB"]
+            
+            for (var i = 0; i < myArray.length; i++) {
+
+                console.log(myArray[i].split('_')[5])
+                var etiquetas = myArray[i].split('_')[5].split('|')
+                var html_etiquetas = '';
+                for(var j=0;j<etiquetas.length;j++){
+                    html_etiquetas=html_etiquetas+"<div style='width: min-content; background: #32d4a4; margin: 0px 5px 0px 0px; color: white; padding: 0px 5px 0px 5px; border-radius: 5px; font-size: 15px;'>"+
+                                                    etiquetas[j]+
+                                                    "</div>";
+                }
+
+            var alu = i+1;
+            $("#idBody").append("<tr>"
+                                    +"<td>" + myArray[i].split('_')[0] + "</td>"
+                                    +"<td>" + myArray[i].split('_')[1] + "</td>"
+                                    +"<td>" + myArray[i].split('_')[2] + "</td>"
+                                    +"<td>" + myArray[i].split('_')[3] + "</td>"
+                                    +"<td>" + myArray[i].split('_')[4] + "</td>"
+                                    +"<td style='display:none'>" + myArray[i].split('_')[5] + "</td>"
+                                    +"<td><div style='display: flex;'>" + html_etiquetas + "</div></td>"
+                                    +"<td>" + "<button onclick='return fn_ficha("+usr+", "+alu+")' type='button' class='btn btn-info'><svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-search' viewBox='0 0 16 16'> <path d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/> <\/svg> <label for=''>Ficha</label><\/button>" + "</td>"
+                                    +"</tr>");
+            }
+            return false;
+        }
+
+        //Contenido
+        function comparer(index) {
+            return function(a, b) {
+            var valA = getCellValue(a, index),
+                valB = getCellValue(b, index)
+            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB)
+            }
+        }
+
+        function getCellValue(row, index) {
+            return $(row).children('td').eq(index).html()
+        }
+
+        function setIcon(element, asc) {
+            $("th").each(function(index) {
+            $(this).removeClass("sorting");
+            $(this).removeClass("asc");
+            $(this).removeClass("desc");
+            });
+            element.addClass("sorting");
+            if (asc) element.addClass("asc");
+            else element.addClass("desc");
+        }
+
+        function fn_Buscar(){
+
+            var texto = $("#txtAlumno").val().toLowerCase();
+
+            $("#idBody").html("");
+            
+            var myArray = ["Álvaro Sánchez Monteagudo_Valencia_España_+34657852546_smontegudo@gmail.com_ANGULAR|REACT|HTML&CSS_BB", 
+                            "Amparo Herra Climent_Sevilla_España_+34123456789_aherrera@gmail.com_FLUTTER|REACT_BB", 
+                            "Ana Gutierrez Lozano_Madrid_España_+34987541236_agutierrez@gmail.com_REACT|SYMFONY_BB", 
+                            "Antonio Miguel Lacunza_Barcelona_España_+34758426985_amiguel@gmail.com_ANGULAR|REACT_BB", 
+                            "Antonio Delgado Jimeno_Oviedo_España_+34542874517_adelgado@gmail.com_ANGULAR|HTML&CSS_BB", 
+                            "Belén Jerez Rivera_Jaen_España_+34968574215_bjerez@gmail.com_HTML&CSS_BB", 
+                            "Carla Barroso Soriano_Gijón_España_+34485926157_cbarroso@gmail.com_REACT_BB", 
+                            "Carlos Yuste Guerrero_Valencia_España_+34487596854_cyuste@gmail.com_ANGULAR_BB", 
+                            "Carmina Pérez Lopez_Sevilla_España_+34154785426_cperez@gmail.com_FLUTTER_BB", 
+                            "Iker Casillas_Madrid_España_+34154859263_ikasillas@gmail.com_FLUTTER|REACT_BB"]
+
+
+            
+            for (var i = 0; i < myArray.length; i++) {
+
+                if(myArray[i].toLowerCase().indexOf(texto) > -1){
+
+                    var etiquetas = myArray[i].split('_')[5].split('|')
+                    var html_etiquetas = '';
+                    for(var j=0;j<etiquetas.length;j++){
+                        html_etiquetas=html_etiquetas+"<div style='width: min-content; background: #32d4a4; margin: 0px 5px 0px 0px; color: white; padding: 0px 5px 0px 5px; border-radius: 5px; font-size: 15px;'>"+
+                                                        etiquetas[j]+
+                                                        "</div>";
+                    }
+
+                    var usr = $("#usr").text();
+                    var alu = i+1;
+                    $("#idBody").append("<tr>"
+                                    +"<td>" + myArray[i].split('_')[0] + "</td>"
+                                    +"<td>" + myArray[i].split('_')[1] + "</td>"
+                                    +"<td>" + myArray[i].split('_')[2] + "</td>"
+                                    +"<td>" + myArray[i].split('_')[3] + "</td>"
+                                    +"<td>" + myArray[i].split('_')[4] + "</td>"
+                                    +"<td style='display:none'>" + myArray[i].split('_')[5] + "</td>"
+                                    +"<td><div style='display: flex;'>" + html_etiquetas + "</div></td>"
+                                    +"<td>" + "<button onclick='return fn_ficha("+usr+", "+alu+")' type='button' class='btn btn-info'><svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-search' viewBox='0 0 16 16'> <path d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/> <\/svg> <label for=''>Ficha</label><\/button>" + "</td>"
+                                    +"</tr>");
+                }
+            }
+
+            return false;
+        }
+
+        function pendiente(){
+            alert("Pendiente");
+            return false;
+        }
+
+        function fn_ficha(usr, alu){
+            window.location.href = "ficha.html?usr="+usr+"&alu="+alu;
+            return false;
+        }
+
+    </script>
+
+    <style>
+
+        body{
+            background-color: #f8f8f9;
+        }
+
+        .textLeft{
+            text-align: left;
+        }
+
+        .textRight{
+            text-align: right;
+        }
+
+
+
+        * {
+            margin:0px;
+            padding:0px;
+        }
+
+        #header {
+            margin:auto;
+            width:500px;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        ul, ol {
+            list-style:none;
+            padding-left:0;
+            margin-bottom: 0rem;
+        }
+
+        .nav > li {
+            float:left;
+        }
+
+        .nav li a {
+            /*background-color:#000;
+            color:#fff;*/
+            text-decoration:none;
+            padding:10px 12px;
+            display:block;
+        }
+
+        .nav ul li a:hover {
+            background-color:#b3acac2f;
+        }
+
+        .nav li ul {
+            display:none;
+            position:absolute;
+            min-width:140px;
+        }
+
+        .nav li:hover > ul {
+            display:block;
+        }
+
+        .nav li ul li {
+            position:relative;
+        }
+
+        .nav li ul li ul {
+            right:-140px;
+            top:0px;
+        }
+
+        .mi_verde{
+            color:#32d4a4;
+        }
+
+        .mi_verde_bold{
+            color:#32d4a4;
+            font-weight: bold;
+        }
+
+        .mi_verde_back{
+            background:#32d4a4 !important;
+        }
+
+        .mi_verde_back:hover{
+            background:#15a076 !important;
+        }
+
+        ul li a :hover {
+            background-color: red;;
+        }
+
+
+
+        /*Contenido*/
+        table tr th {
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        }
+
+        .sorting {
+        background-color: #D4D4D4;
+        }
+
+        .asc:after {
+        content: ' ↑';
+        }
+
+        .desc:after {
+        content: " ↓";
+        }
+
+    </style>
+
+</head>
+<body>
+    <div class='container-fluid' style="padding-top: 10px;">
+        <div class='row'>
+            <div class='col'>
+                <h3 class="textLeft">
+                    <span>OpenBootcamp</span>
+                    <span class="mi_verde"> | Alumnos</span>
+                </h3>
+            </div>
+            <div class='col'>
+               
+            <div id="header" style="width: fit-content; float: right;">
+                <nav>
+                    <ul class="nav" style="background-color: white; border-radius: 20px 20px 20px 20px; width: 190px;">
+                        <li><div style="display: flex;
+                            align-items: center;
+                            text-align: center;
+                            justify-content: center;">
+                                <div style="
+                                display: flex;
+                                align-items: center;
+                                text-align: center;
+                                justify-content: center;
+                                color: white;
+                                background-color: black;
+                                border-radius: 20px 20px 20px 20px;
+                                height: 40px;
+                                width: 40px;">NA</div>
+                                <a id="a_UserName" href="#" style="height: 40px;
+                                display: flex;
+                                align-items: center;
+                                width: 120px;
+                                color: black;">UserName</a>
+                                <svg style="color: #a5a8b3;
+                                            font-weight: bold;" 
+                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                  </svg>
+                                </div>
+                            <ul style="background-color: white; margin-left: 15px;">
+                                <li>
+                                    <a style="color: black;" href="../login.html">Cerrar Sesión</a> 
+                                </li>
+                                <li>
+                                    <a style="color: black;" href="" onclick="return pendiente();">Cambiar Contraseña</a> 
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            </div>
+        </div>
+
+        <!--Contenido-->
+        <div>
+            <div class="container">
+                <br/>
+                <br/>
+                <div class="row">
+                    <div class="form-group col-sm-12 col-md-6">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td><label style="font-weight: bold; padding-right: 20px;" for="exampleInputEmail1">Alumnos</label></td>
+                                <td><input id="txtAlumno" onkeyup="return fn_Buscar();" placeholder='Buscar por Nombre, Email o Palabra clave...' style="background:#e6e6ea" type="text" class="form-control" /></td>
+                            </tr>
+                        </table>
+                        
+                    </div>
+                    <div class="col-sm-12 col-md-6"></div>
+                </div>
+                <br/>
+                <div class="panel panel-default">
+                  <div class="panel-body"
+                       style="border: solid 1px #e6e6ea;
+                              border-radius: 20px;
+                              background: white;
+                              overflow: auto;">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>NOMBRE</th>
+                          <th>CIUDAD</th>
+                          <th>PAIS</th>
+                          <th>TELEFONO</th>
+                          <th>CORREO ELECTRÓNICO</th>
+                          <th>ETIQUETAS</th>
+                          <th style="display: none;">ETIQUETAS oculto</th>
+                          <th>DETALLE</th>
+                        </tr>
+                      </thead>
+                      <tbody id="idBody">
+                        <!--
+                        <tr>
+                          <td>Valor 1</td>
+                          <td>Valor 2</td>
+                          <td>Valor 3</td>
+                          <td>Valor 4</td>
+                          <td>8</td>
+                          <td style="display: none;">Valor 4</td>
+                          <td>aaa</td>
+                        </tr>-->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <div style="display: none;">
+            <input id="usr" type="text" value="">
+        </div>
+
+    </div>
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+</body>
+</html>
